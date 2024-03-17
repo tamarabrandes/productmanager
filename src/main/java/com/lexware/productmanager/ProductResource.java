@@ -1,14 +1,19 @@
 package com.lexware.productmanager;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.lexware.productmanager.model.Product;
 import com.lexware.productmanager.service.ProductService;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
+@SecurityRequirement(name = "admin")
 @RequestMapping("/product")
 public class ProductResource {
     private final ProductService productService;

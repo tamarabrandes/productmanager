@@ -12,6 +12,7 @@ public class Product implements Serializable {
     private Long id;
     private String titel;
     private String description;
+    @Column(unique = true)
     private Long gtin;
     private String imageUrl;
     @Column(nullable = false, updatable = false)
