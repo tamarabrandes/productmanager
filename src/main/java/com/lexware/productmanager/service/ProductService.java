@@ -1,7 +1,8 @@
 package com.lexware.productmanager.service;
 
 
-import com.lexware.productmanager.exception.productNotFoundException;
+import com.lexware.productmanager.exception.productFrontendExceptions;
+import com.lexware.productmanager.gtin.GTINValidator;
 import com.lexware.productmanager.model.Product;
 import com.lexware.productmanager.repo.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,24 @@ public class ProductService {
     }
 
     public Product addProduct(Product product) {
+        String gtin = product.getGtin().toString();
+        StringBuilder frontMessage = new StringBuilder();
         product.setProductCode(UUID.randomUUID().toString());
-        return productRepo.save(product);
+
+        if (product.getTitel().length() > 20) {
+            frontMessage.append("Title of your product is too long");
+        }
+
+        if (!GTINValidator.isValidGTIN(gtin)) {
+            frontMessage.append("Your GTIN is not correct");
+        }
+
+        if(frontMessage.length() == 0) {
+            productRepo.save(product);
+        }
+
+        return productRepo.findProductById(Long.valueOf(product.getId()))
+                .orElseThrow(()-> new productFrontendExceptions(frontMessage.toString()));
     }
 
     public List<Product> findAllProducts(){
@@ -40,7 +57,7 @@ public class ProductService {
 
     public Product findProductById(Long id) throws Throwable {
         return productRepo.findProductById(id)
-                .orElseThrow(()-> new productNotFoundException("User with id" + id + "was not found"));
+                .orElseThrow(()-> new productFrontendExceptions("User with id" + id + "was not found"));
     }
 
     public Product findProductByGtin(Long gtin) {

@@ -10,11 +10,11 @@ import com.lexware.productmanager.service.ProductService;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
 @SecurityRequirement(name = "admin")
-//@RequestMapping("/product")
 public class ProductResource {
     private final ProductService productService;
 
@@ -36,13 +36,13 @@ public class ProductResource {
     }
     @GetMapping("/product/findgtin/{gtin}")
     public ResponseEntity <Product> getAllProductByGtin(@PathVariable ("gtin") Long gtin) {
-        Product product = productService.findProductByGtin(gtin);
+        Product product  = productService.findProductByGtin(gtin);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
     @PostMapping("/product/add")
-    public ResponseEntity<Product> addProduct(@RequestBody Product product){
-    Product newProduct = productService.addProduct(product);
-    return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
+    public ResponseEntity<Product> addProduct(@RequestBody Product product)  throws Throwable {
+        Product newProduct = productService.addProduct(product);
+        return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
     }
 
     @PutMapping("/product/update")
